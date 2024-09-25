@@ -1,0 +1,31 @@
+.seller-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center;     /* Center horizontally */
+    background: linear-gradient(-45deg, #696f2f, #222009, #949435, #716610);
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s ease infinite;
+    color: white; /* Change text color for better visibility */
+    text-align: center; /* Center text */
+}
+
+.seller-actions {
+    margin-top: 20px; /* Space above actions */
+}
+
+.action-button {
+    margin: 10px; /* Space between buttons */
+    padding: 10px 20px; /* Add padding for button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer */
+    background-color: #333; /* Dark background for buttons */
+    color: white; /* Text color */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.action-button:hover {
+    background-color: #555; /* Change color on hover */
+}

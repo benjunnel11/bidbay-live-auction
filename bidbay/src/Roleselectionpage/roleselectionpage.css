@@ -1,0 +1,73 @@
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.role-selection-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center;     /* Center horizontally */
+    background: linear-gradient(-45deg, #696f2f, #222009, #949435, #716610);
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s ease infinite;
+    color: white; /* Change text color for better visibility */
+    text-align: center; /* Center text */
+}
+
+.role-selection-page h1 {
+    margin-bottom: 20px; /* Add space below the title */
+}
+
+.role-selection-page button {
+    margin: 10px 0; /* Space between buttons */
+    padding: 10px; /* Add padding for button */
+    width: 150px; /* Set a consistent width */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer */
+    background-color: #333; /* Dark background for buttons */
+    color: white; /* Text color */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.role-selection-page button:hover {
+    background-color: #555; /* Change color on hover */
+}
+
+.role-selection-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center;     /* Center horizontally */
+    background: linear-gradient(-45deg, #696f2f, #222009, #949435, #716610);
+    background-size: 400% 400%;
+    animation: gradientAnimation 20s ease infinite;
+    color: white; /* Change text color for better visibility */
+    text-align: center; /* Center text */
+}
+
+.role-selection-page button {
+    margin: 10px 0; /* Space between buttons */
+    padding: 10px; /* Add padding for button */
+    width: 150px; /* Set a consistent width */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer */
+    background-color: #333; /* Dark background for buttons */
+    color: white; /* Text color */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+.role-selection-page button:hover {
+    background-color: #555; /* Change color on hover */
+}
