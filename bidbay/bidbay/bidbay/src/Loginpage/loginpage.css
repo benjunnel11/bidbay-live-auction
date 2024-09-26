@@ -1,4 +1,3 @@
-/* registrationpage.css */
 @keyframes gradientAnimation {
     0% {
         background-position: 0% 50%;
@@ -11,14 +10,8 @@
     }
 }
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.registration-page {
-    /* Ensure the registration page covers the full viewport height */
+.login-page {
+    /* Ensure the login page covers the full viewport height */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -31,11 +24,11 @@ body {
     text-align: center; /* Center text */
 }
 
-.registration-page h1 {
+.login-page h2 {
     margin-bottom: 20px; /* Add space below the title */
 }
 
-.registration-page input {
+.login-page input {
     margin: 10px 0; /* Space between inputs */
     padding: 10px; /* Add padding for input */
     width: 300px; /* Set a consistent width */
@@ -43,7 +36,7 @@ body {
     border-radius: 5px; /* Add rounded corners */
 }
 
-.registration-page button {
+.login-page button {
     margin: 10px 0; /* Space between buttons */
     padding: 10px; /* Add padding for button */
     width: 150px; /* Set a consistent width */
@@ -55,11 +48,6 @@ body {
     transition: background-color 0.3s; /* Smooth transition */
 }
 
-.registration-page button:hover {
+.login-page button:hover {
     background-color: #555; /* Change color on hover */
-}
-
-.error-message {
-    color: red;
-    text-align: center;
 }

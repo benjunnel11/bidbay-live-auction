@@ -1,6 +1,6 @@
 {
-  "homepage": "https://benjunnel11.github.io/bidbay-live-auction",
   "name": "bidbay",
+  "homepage": "https://github.com/benjunnel11/bidbay-live-auction",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

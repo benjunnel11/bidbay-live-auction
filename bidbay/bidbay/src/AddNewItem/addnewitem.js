@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom'; 
-import { firestore, storage } from '../firebase'; 
+import { firestore, storage, auth } from '../firebase'; 
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore'; 
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; 
 import './addnewitem.css'; 
@@ -20,25 +20,27 @@ function AddNewItem() {
     const [error, setError] = useState(''); 
     const [successMessage, setSuccessMessage] = useState(''); 
 
+    // Replace this with the actual current user's seller ID
+    const currentUserId = "sellerId"; 
+
     const handleAddOrEditItem = async () => {
         if (!newItem || !initialPrice || !minIncrement || !imageFile || !day || !startTime || !duration) {
             setError('All fields are required!');
             return;
         }
-
+    
         try {
             let imageURL;
-
-            // If a new image is uploaded, upload it to Firebase Storage
+    
+            // Upload the image if a new one is selected
             if (imageFile) {
                 const storageRef = ref(storage, `items/${imageFile.name}`);
                 await uploadBytes(storageRef, imageFile);
                 imageURL = await getDownloadURL(storageRef);
             } else {
-                imageURL = item.imageURL; // Use the existing image URL for editing
+                imageURL = item.imageURL; // Use existing image URL for editing
             }
-
-            // If the item exists, update it; otherwise, add a new item
+    
             if (item) {
                 const itemRef = doc(firestore, 'items', item.id);
                 await updateDoc(itemRef, {
@@ -51,6 +53,7 @@ function AddNewItem() {
                     duration: parseFloat(duration),
                 });
             } else {
+                // Save the item with seller ID
                 await addDoc(collection(firestore, 'items'), {
                     name: newItem,
                     initialPrice: parseFloat(initialPrice),
@@ -59,23 +62,18 @@ function AddNewItem() {
                     day: day,
                     startTime: startTime,
                     duration: parseFloat(duration),
+                    sellerId: auth.currentUser.uid, // Store the current user's ID
                 });
             }
-
+    
             setSuccessMessage('Item saved successfully');
-            // Reset the form fields after saving
-            setNewItem('');
-            setInitialPrice('');
-            setMinIncrement('');
-            setImageFile(null);
-            setDay('');
-            setStartTime('');
-            setDuration('');
+            // Reset form fields...
         } catch (error) {
             console.error("Error saving item:", error);
             setError('Failed to save item. Please try again.');
         }
     };
+    
 
     const handleBack = () => {
         navigate(-1); 

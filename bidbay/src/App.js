@@ -8,6 +8,7 @@ import BidderPage from './Bidderpage/bidderpage';
 import ViewItemsPage from './Viewitempage/ViewItemPage';
 import AddNewItem from './AddNewItem/addnewitem';
 import ItemDetailsPage from './ItemDetailsPage/ItemDetailsPage';
+import ViewProfilePage from './Viewprofilepage/viewprofilepage';
 import './App.css';
 import './firebase';
 
@@ -19,6 +20,7 @@ function App() {
                     <Route path='/' element={<Loginpage />} />
                     <Route path='/registration' element={<Registrationpage />} />
                     <Route path='/roleselection' element={<RoleSelectionPage />} /> 
+                    <Route path='/viewprofile' element={<ViewProfilePage/>}/>
                     <Route path='/seller' element={<SellerPage />} />
                     <Route path='/bidder' element={<BidderPage />} />
                     <Route path='/viewitem' element={<ViewItemsPage />} />

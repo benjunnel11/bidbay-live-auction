@@ -1,0 +1,20 @@
+.profile-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 2px solid #333;
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 1000; /* Ensure it stays above other content */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.profile-window h2 {
+    margin: 0 0 10px;
+}
+
+.profile-window p {
+    margin: 5px 0;
+}
