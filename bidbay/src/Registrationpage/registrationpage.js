@@ -1,42 +1,35 @@
-import React, { useState, useRef } from 'react'; // Import useRef
-import { auth, firestore } from '../firebase'; // Import Firestore and Auth
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore methods
-import { createUserWithEmailAndPassword } from "firebase/auth"; 
-import { useNavigate } from 'react-router-dom'; 
-import { doc, setDoc } from "firebase/firestore";
+import React, { useState } from 'react';
+import { auth } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 import './registrationpage.css';
 
 const RegistrationPage = () => {
-    const messageRef = useRef(); // Initialize useRef
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const handleRegistration = async (e) => {
         e.preventDefault();
-        console.log(messageRef.current?.value); // Use optional chaining
-
         setError('');
 
+        if (password !== confirmPassword) {
+            setError("Passwords do not match.");
+            return;
+        }
+
         try {
-            // Create user with email and password
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            // Save additional user info to Firestore
-            await setDoc(doc(firestore, "users", user.uid), {
-                username: username,
-                email: email,
-            });
-
-            // Redirect to login page after successful registration
-            navigate('/login');
+            await createUserWithEmailAndPassword(auth, email, password);
+            // Save username in local storage for phase 2
+            localStorage.setItem('username', username);
+            navigate('/registration2'); // Corrected this line
 
         } catch (error) {
             console.error("Error registering user:", error);
-            setError(error.message); // Display the error message
+            setError(error.message);
         }
     };
 
@@ -66,9 +59,15 @@ const RegistrationPage = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <button type="submit">Register</button>
+                <input
+                    type="password"
+                    placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                />
+                <button type="submit">Next</button>
             </form>
-            <button onClick={() => navigate('/login')}>Back to Login</button>
         </div>
     );
 };
