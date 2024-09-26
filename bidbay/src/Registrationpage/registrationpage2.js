@@ -3,6 +3,7 @@ import { firestore } from '../firebase'; // Adjust the import path as necessary
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './registrationpage.css';
+import { auth } from '../firebase'; // Import auth
 
 const RegistrationPage2 = () => {
     const [firstName, setFirstName] = useState('');
@@ -13,15 +14,21 @@ const RegistrationPage2 = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const username = localStorage.getItem('username'); // Get the username from local storage
+    const uid = auth.currentUser?.uid; // Get the UID of the currently authenticated user
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
+        // Check if the user is authenticated
+        if (!uid) {
+            setError("User not authenticated.");
+            return;
+        }
+
         try {
-            // Save personal info to Firestore
-            await setDoc(doc(firestore, 'users', username), {
+            // Save personal info to Firestore under the personalInfo subcollection
+            await setDoc(doc(firestore, 'users', uid, 'personalInfo', 'personalData'), {
                 firstName,
                 lastName,
                 gender,

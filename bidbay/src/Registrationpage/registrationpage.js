@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase';
+import { auth, firestore } from '../firebase'; // Adjust the import path as necessary
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './registrationpage.css';
 
@@ -22,10 +23,16 @@ const RegistrationPage = () => {
         }
 
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
-            // Save username in local storage for phase 2
-            localStorage.setItem('username', username);
-            navigate('/registration2'); // Corrected this line
+            // Create user with email and password
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const uid = userCredential.user.uid; // Get the UID of the newly created user
+            
+            // Save the username in the users collection using the UID
+            await setDoc(doc(firestore, 'users', uid), {
+                username,
+            });
+
+            navigate('/registration2'); // Redirect to phase 2 registration
 
         } catch (error) {
             console.error("Error registering user:", error);

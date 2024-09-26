@@ -1,41 +1,49 @@
 import React, { useEffect, useState } from 'react';
-import { firestore } from '../firebase';
+import { auth, firestore } from '../firebase'; // Adjust this path as necessary
 import { doc, getDoc } from 'firebase/firestore';
-import './viewprofile.css';
+import './viewprofilepage.css';
 
-const ViewProfilePage = ({ user }) => {
-    const [profileData, setProfileData] = useState(null);
-    
+const ViewProfilePage = () => {
+    const [loading, setLoading] = useState(true);
+    const [username, setUsername] = useState('');
+    const [error, setError] = useState('');
+
     useEffect(() => {
-        const fetchProfileData = async () => {
-            const docRef = doc(firestore, 'users', user.uid);
-            const docSnap = await getDoc(docRef);
+        const fetchUserProfile = async () => {
+            try {
+                const user = auth.currentUser; // Get the current authenticated user
+                if (user) {
+                    const userDoc = doc(firestore, 'users', user.uid); // Reference to the user's document
+                    const userSnap = await getDoc(userDoc); // Fetch the document
 
-            if (docSnap.exists()) {
-                setProfileData(docSnap.data());
-            } else {
-                console.log("No such document!");
+                    if (userSnap.exists()) {
+                        setUsername(userSnap.data().username); // Set username from Firestore
+                    } else {
+                        setError('No user profile found.');
+                    }
+                } else {
+                    setError('No user is logged in.');
+                }
+            } catch (err) {
+                console.error("Error fetching user profile:", err);
+                setError('Error fetching user profile');
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchProfileData();
-    }, [user.uid]);
+        fetchUserProfile();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>; // Loading state
+    }
 
     return (
         <div className="profile-window">
-            <h2>Profile Details</h2>
-            {profileData ? (
-                <div>
-                    <p><strong>Username:</strong> {profileData.username}</p>
-                    <p><strong>First Name:</strong> {profileData.firstName}</p>
-                    <p><strong>Last Name:</strong> {profileData.lastName}</p>
-                    <p><strong>Gender:</strong> {profileData.gender}</p>
-                    <p><strong>Birthdate:</strong> {profileData.birthdate}</p>
-                    <p><strong>Address:</strong> {profileData.address}</p>
-                </div>
-            ) : (
-                <p>Loading profile...</p>
-            )}
+            <h2>User Profile</h2>
+            {error && <p className="error-message">{error}</p>}
+            <p>Username: {username}</p>
         </div>
     );
 };
