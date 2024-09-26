@@ -1,14 +1,13 @@
+// ViewItemsPage.js
 import React, { useEffect, useState } from 'react';
-import { firestore, auth } from '../firebase'; // Import auth to access current user
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { firestore } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './ViewItemPage.css'; // Import the CSS file for styling
 
 function ViewItemsPage() {
     const [items, setItems] = useState([]);
     const navigate = useNavigate();
-    const currentUserId = auth.currentUser.uid; // Get the logged-in user's ID
-
     const handleBack = () => {
         navigate(-1);
     };
@@ -17,8 +16,7 @@ function ViewItemsPage() {
         const fetchItems = async () => {
             try {
                 const itemsCollection = collection(firestore, 'items');
-                const q = query(itemsCollection, where("sellerId", "==", currentUserId));
-                const itemSnapshot = await getDocs(q);
+                const itemSnapshot = await getDocs(itemsCollection);
                 const itemList = itemSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setItems(itemList);
             } catch (error) {
@@ -27,7 +25,7 @@ function ViewItemsPage() {
         };
 
         fetchItems();
-    }, [currentUserId]); // Add currentUserId as a dependency
+    }, []);
 
     const handleItemClick = (itemId) => {
         navigate(`/itemdetail/${itemId}`);

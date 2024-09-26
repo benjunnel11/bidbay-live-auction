@@ -1,14 +1,16 @@
-import React, { useState, useRef } from 'react'; // Import useRef
-import { auth, firestore } from '../firebase'; // Import Firestore and Auth
-import { collection, addDoc } from "firebase/firestore"; // Import Firestore methods
-import { createUserWithEmailAndPassword } from "firebase/auth"; 
-import { useNavigate } from 'react-router-dom'; 
-import { doc, setDoc } from "firebase/firestore";
+import React, { useState } from 'react';
+import { auth, firestore } from '../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { doc, setDoc } from 'firebase/firestore';
 import './registrationpage.css';
 
 const RegistrationPage = () => {
-    const messageRef = useRef(); // Initialize useRef
-    const [username, setUsername] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [gender, setGender] = useState('');
+    const [birthdate, setBirthdate] = useState('');
+    const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -16,27 +18,27 @@ const RegistrationPage = () => {
 
     const handleRegistration = async (e) => {
         e.preventDefault();
-        console.log(messageRef.current?.value); // Use optional chaining
-
         setError('');
 
         try {
-            // Create user with email and password
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
             // Save additional user info to Firestore
             await setDoc(doc(firestore, "users", user.uid), {
-                username: username,
-                email: email,
+                firstName,
+                lastName,
+                gender,
+                birthdate,
+                address,
+                email,
             });
 
-            // Redirect to login page after successful registration
             navigate('/login');
 
         } catch (error) {
             console.error("Error registering user:", error);
-            setError(error.message); // Display the error message
+            setError(error.message);
         }
     };
 
@@ -47,9 +49,36 @@ const RegistrationPage = () => {
             <form onSubmit={handleRegistration}>
                 <input
                     type="text"
-                    placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Gender"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    required
+                />
+                <input
+                    type="date"
+                    value={birthdate}
+                    onChange={(e) => setBirthdate(e.target.value)}
+                    required
+                />
+                <input
+                    type="text"
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
                     required
                 />
                 <input

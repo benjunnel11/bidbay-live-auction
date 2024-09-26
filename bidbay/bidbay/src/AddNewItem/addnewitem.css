@@ -1,4 +1,3 @@
-/* registrationpage.css */
 @keyframes gradientAnimation {
     0% {
         background-position: 0% 50%;
@@ -11,56 +10,54 @@
     }
 }
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-.registration-page {
-    min-height: 100vh; /* Ensure full viewport height */
+.add-new-item {
+    /* Ensure the add new item page covers the full viewport height */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center vertically */
     align-items: center;     /* Center horizontally */
     background: linear-gradient(-45deg, #696f2f, #222009, #949435, #716610);
     background-size: 400% 400%;
-    animation: gradientAnimation 20s ease infinite; /* Gradient animation */
-    color: white; /* Text color */
+    animation: gradientAnimation 20s ease infinite;
+    color: white; /* Change text color for better visibility */
     text-align: center; /* Center text */
-    padding: 20px; /* Add padding around the content */
+    padding: 20px; /* Add some padding */
 }
 
-.registration-page h1 {
-    margin-bottom: 20px; /* Space below title */
+.add-new-item h1 {
+    margin-bottom: 20px; /* Add space below the title */
+    font-size: 2em; /* Increase font size for title */
 }
 
-.registration-page input {
+.add-new-item input {
     margin: 10px 0; /* Space between inputs */
-    padding: 10px; /* Padding for input */
+    padding: 10px; /* Add padding for input */
     width: 300px; /* Set a consistent width */
     border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 5px; /* Add rounded corners */
 }
 
-.registration-page button {
+.add-new-item button {
     margin: 10px 0; /* Space between buttons */
-    padding: 10px; /* Padding for button */
+    padding: 10px; /* Add padding for button */
     width: 150px; /* Set a consistent width */
     border: none; /* Remove border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor */
+    border-radius: 5px; /* Add rounded corners */
+    cursor: pointer; /* Change cursor to pointer */
     background-color: #333; /* Dark background for buttons */
     color: white; /* Text color */
     transition: background-color 0.3s; /* Smooth transition */
 }
 
-.registration-page button:hover {
+.add-new-item button:hover {
     background-color: #555; /* Change color on hover */
 }
 
-.error-message {
-    color: red; /* Red color for error messages */
-    text-align: center; /* Center error messages */
-    margin-top: 10px; /* Space above error messages */
+.add-new-item .error {
+    color: red; /* Color for error messages */
+}
+
+.add-new-item .success {
+    color: green; /* Color for success messages */
 }
