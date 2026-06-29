@@ -1,65 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
-import { firestore } from '../firebase'; 
-import { collection, getDocs } from 'firebase/firestore'; 
-import './sellerpage.css'; 
+import { useNavigate } from 'react-router-dom';
+import { firestore, auth } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import './sellerpage.css';
 
 function SellerPage() {
     const navigate = useNavigate();
     const [items, setItems] = useState([]);
 
-    useEffect(() => {
-        fetchItems();
-    }, []);
+    useEffect(() => { fetchItems(); }, []);
 
     const fetchItems = async () => {
         try {
             const itemsCollection = collection(firestore, 'items');
             const itemSnapshot = await getDocs(itemsCollection);
-            const itemList = itemSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setItems(itemList);
+            setItems(itemSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
         } catch (error) {
             console.error("Error fetching items:", error);
         }
     };
 
-    const handleAddNewItem = () => {
-        navigate('/addnewitem'); // Navigate to the Add New Item page
-    };
-
-    const handleViewMyItems = () => {
-        navigate('/viewitem'); // Navigate to the View My Items page
-    };
-
-    const handleManageAuctions = () => {
-        navigate('/manage-auctions'); // Navigate to Manage Auctions page
-    };
-    const handleBack = () => {
-        navigate(-1);
-    };
-
     return (
         <div className="seller-page">
-            <h1>Welcome to the Seller Page</h1>
-            <p>This is where sellers can manage their items for auction.</p>
-            <div className="seller-actions">
-                <button className="action-button" onClick={handleAddNewItem}>Add New Item</button>
-                <button className="action-button" onClick={handleViewMyItems}>View My Items</button>
-                <button className="action-button" onClick={handleManageAuctions}>Manage Auctions</button>
-                <button className="action-button" onClick={handleBack}>Back</button>
+            <div className="seller-header">
+                <div>
+                    <h1>Seller Dashboard</h1>
+                    <p>Manage your auction items</p>
+                </div>
+                <div className="seller-actions">
+                    <button className="btn-primary" onClick={() => navigate('/addnewitem')}>+ Add Item</button>
+                    <button className="btn-ghost" onClick={() => navigate('/viewitem')}>View Items</button>
+                    <button className="btn-ghost" onClick={() => navigate(-1)}>Back</button>
+                </div>
             </div>
 
-            <div className="item-list">
-                <h2>My Items</h2>
-                <ul>
-                    {items.length > 0 ? (
-                        items.map(item => (
-                            <li key={item.id}>{item.name}</li>
-                        ))
-                    ) : (
-                        <li>No items available.</li>
-                    )}
-                </ul>
+            <div className="items-grid">
+                {items.length > 0 ? items.map(item => (
+                    <div key={item.id} className="item-card" onClick={() => navigate(`/itemdetail/${item.id}`)}>
+                        {item.imageURL && <img src={item.imageURL} alt={item.name} />}
+                        <div className="item-info">
+                            <h3>{item.name}</h3>
+                            <span className="item-price">${parseFloat(item.initialPrice).toFixed(2)}</span>
+                        </div>
+                    </div>
+                )) : (
+                    <div className="empty-state">
+                        <p>No items yet. Add your first auction item!</p>
+                        <button className="btn-primary" onClick={() => navigate('/addnewitem')}>+ Add Item</button>
+                    </div>
+                )}
             </div>
         </div>
     );

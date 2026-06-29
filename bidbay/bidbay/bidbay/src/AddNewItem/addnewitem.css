@@ -1,63 +1,13 @@
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-.add-new-item {
-    /* Ensure the add new item page covers the full viewport height */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center vertically */
-    align-items: center;     /* Center horizontally */
-    background: linear-gradient(-45deg, #696f2f, #222009, #949435, #716610);
-    background-size: 400% 400%;
-    animation: gradientAnimation 20s ease infinite;
-    color: white; /* Change text color for better visibility */
-    text-align: center; /* Center text */
-    padding: 20px; /* Add some padding */
-}
-
-.add-new-item h1 {
-    margin-bottom: 20px; /* Add space below the title */
-    font-size: 2em; /* Increase font size for title */
-}
-
-.add-new-item input {
-    margin: 10px 0; /* Space between inputs */
-    padding: 10px; /* Add padding for input */
-    width: 300px; /* Set a consistent width */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Add rounded corners */
-}
-
-.add-new-item button {
-    margin: 10px 0; /* Space between buttons */
-    padding: 10px; /* Add padding for button */
-    width: 150px; /* Set a consistent width */
-    border: none; /* Remove border */
-    border-radius: 5px; /* Add rounded corners */
-    cursor: pointer; /* Change cursor to pointer */
-    background-color: #333; /* Dark background for buttons */
-    color: white; /* Text color */
-    transition: background-color 0.3s; /* Smooth transition */
-}
-
-.add-new-item button:hover {
-    background-color: #555; /* Change color on hover */
-}
-
-.add-new-item .error {
-    color: red; /* Color for error messages */
-}
-
-.add-new-item .success {
-    color: green; /* Color for success messages */
-}
+.add-new-item{min-height:100vh;background:#09090b;display:flex;justify-content:center;align-items:center;padding:40px 24px;}
+.add-new-item{max-width:480px;margin:0 auto;flex-direction:column;}
+.add-new-item h1{font-size:24px;font-weight:900;margin-bottom:6px;text-align:center;}
+.error{background:rgba(239,68,68,.1);color:#f87171;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;border:1px solid rgba(239,68,68,.2);width:100%;text-align:center;}
+.success{background:rgba(34,197,94,.1);color:#4ade80;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;border:1px solid rgba(34,197,94,.2);width:100%;text-align:center;}
+.add-new-item input[type="text"],.add-new-item input[type="number"],.add-new-item input[type="time"],.add-new-item input[type="file"]{width:100%;padding:10px 14px;background:#18181b;border:1px solid #27272a;border-radius:8px;color:#fafafa;font-size:14px;margin-bottom:12px;font-family:inherit;}
+.add-new-item input:focus{outline:none;border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.1);}
+.add-new-item input::placeholder{color:#52525b;}
+.add-new-item input[type="file"]{padding:8px;font-size:13px;color:#a1a1aa;}
+.add-new-item .action-button{width:100%;padding:12px;background:#8b5cf6;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px;transition:all .2s;}
+.add-new-item .action-button:hover{background:#7c3aed;transform:translateY(-1px);}
+.add-new-item .action-button:last-child{background:transparent;color:#a1a1aa;border:1px solid #27272a;}
+.add-new-item .action-button:last-child:hover{border-color:#8b5cf6;color:#8b5cf6;transform:translateY(-1px);}

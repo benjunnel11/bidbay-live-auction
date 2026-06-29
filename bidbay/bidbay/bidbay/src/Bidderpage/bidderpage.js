@@ -1,86 +1,120 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { firestore } from '../firebase'; // Import Firestore from your Firebase setup
-import { collection, getDocs, addDoc } from 'firebase/firestore';
+import { firestore, auth } from '../firebase';
+import { collection, getDocs, addDoc, query, where, orderBy, limit } from 'firebase/firestore';
 import './bidderpage.css';
 
 function BidderPage() {
     const navigate = useNavigate();
-    const [auctions, setAuctions] = useState([]); // State to store auctions data
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(''); // Error state
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [bidAmounts, setBidAmounts] = useState({});
 
-    // Fetch auctions from Firestore when the page loads
     useEffect(() => {
-        const fetchAuctions = async () => {
+        const fetchItems = async () => {
             try {
-                const auctionsCollection = collection(firestore, 'auctions'); // Firestore collection 'auctions'
-                const auctionSnapshot = await getDocs(auctionsCollection); // Get all docs from the collection
-                const auctionList = auctionSnapshot.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                })); // Map the auction data
-                setAuctions(auctionList); // Set auctions data to state
+                const itemsCollection = collection(firestore, 'items');
+                const itemSnapshot = await getDocs(itemsCollection);
+                const itemList = itemSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                for (let item of itemList) {
+                    const bidsQuery = query(
+                        collection(firestore, 'bids'),
+                        where('auctionId', '==', item.id),
+                        orderBy('amount', 'desc'),
+                        limit(1)
+                    );
+                    const bidSnap = await getDocs(bidsQuery).catch(() => null);
+                    item.highestBid = bidSnap && !bidSnap.empty ? bidSnap.docs[0].data().amount : item.initialPrice;
+                    item.bidCount = bidSnap ? bidSnap.size : 0;
+                }
+
+                setItems(itemList);
                 setLoading(false);
             } catch (err) {
-                setError('Failed to load auctions');
+                console.error('Error fetching items:', err);
                 setLoading(false);
             }
         };
-
-        fetchAuctions(); // Call the function on component mount
+        fetchItems();
     }, []);
 
-    const handleBid = async (auctionId) => {
+    const handleBid = async (item) => {
+        const amount = parseFloat(bidAmounts[item.id]);
+        if (!amount || amount <= 0) {
+            alert('Please enter a valid bid amount');
+            return;
+        }
+        const minBid = (item.highestBid || item.initialPrice) + (item.minIncrement || 1);
+        if (amount < minBid) {
+            alert(`Bid must be at least $${minBid.toFixed(2)}`);
+            return;
+        }
+
         try {
-            const bidData = {
-                auctionId: auctionId,
-                bidder: 'Your Bidder Name', // You can get the bidder info from auth
-                amount: 100, // Hardcoded bid amount for demonstration
+            const user = auth.currentUser;
+            await addDoc(collection(firestore, 'bids'), {
+                auctionId: item.id,
+                bidder: user ? user.email : 'Anonymous',
+                amount: amount,
                 timestamp: new Date(),
-            };
-            await addDoc(collection(firestore, 'bids'), bidData); // Save the bid in 'bids' collection
-            alert('Bid successfully placed!');
+            });
+            alert(`Bid of $${amount.toFixed(2)} placed on ${item.name}!`);
+            item.highestBid = amount;
+            setItems([...items]);
+            setBidAmounts({ ...bidAmounts, [item.id]: '' });
         } catch (error) {
             console.error('Error placing bid:', error);
             alert('Failed to place bid.');
         }
     };
 
-    const handleBack = () => {
-        navigate(-1);
-    };
-
-    if (loading) {
-        return <div>Loading auctions...</div>;
-    }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
+    if (loading) return <div className="loading">Loading auctions...</div>;
 
     return (
         <div className="bidder-page">
-            <h1>Welcome to the Bidder Page</h1>
-            <p>Here you can view and manage your auctions and bids.</p>
+            <div className="bidder-header">
+                <h1>Live Auctions</h1>
+                <p>Browse items and place your bids</p>
+            </div>
 
-            <div className="auction-list">
-                <h2>Available Auctions</h2>
-                {auctions.length > 0 ? (
-                    auctions.map((auction) => (
-                        <div key={auction.id} className="auction-item">
-                            <h3>{auction.itemName}</h3>
-                            <p>Starting Price: ${auction.startingPrice}</p>
-                            <button onClick={() => handleBid(auction.id)}>Place Bid</button>
+            <div className="auction-grid">
+                {items.length > 0 ? items.map(item => (
+                    <div key={item.id} className="auction-card">
+                        {item.imageURL && <img src={item.imageURL} alt={item.name} className="auction-img" />}
+                        <div className="auction-body">
+                            <h3>{item.name}</h3>
+                            <div className="auction-meta">
+                                <div className="meta-row">
+                                    <span className="meta-label">Starting Price</span>
+                                    <span className="meta-val">${parseFloat(item.initialPrice).toFixed(2)}</span>
+                                </div>
+                                <div className="meta-row highlight">
+                                    <span className="meta-label">Current Bid</span>
+                                    <span className="meta-val">${parseFloat(item.highestBid || item.initialPrice).toFixed(2)}</span>
+                                </div>
+                                <div className="meta-row">
+                                    <span className="meta-label">Min Increment</span>
+                                    <span className="meta-val">+${parseFloat(item.minIncrement || 1).toFixed(2)}</span>
+                                </div>
+                                {item.day && <div className="meta-row"><span className="meta-label">Auction Day</span><span className="meta-val">{item.day}</span></div>}
+                            </div>
+                            <div className="bid-input-row">
+                                <input
+                                    type="number"
+                                    placeholder={`Min $${((item.highestBid || item.initialPrice) + (item.minIncrement || 1)).toFixed(2)}`}
+                                    value={bidAmounts[item.id] || ''}
+                                    onChange={(e) => setBidAmounts({ ...bidAmounts, [item.id]: e.target.value })}
+                                />
+                                <button onClick={() => handleBid(item)}>Bid</button>
+                            </div>
                         </div>
-                    ))
-                ) : (
-                    <p>No auctions available.</p>
-                )}
+                    </div>
+                )) : <p className="no-items">No items available for auction yet.</p>}
             </div>
 
             <div className="bidder-actions">
-                <button className="action-button" onClick={handleBack}>Back</button>
+                <button className="btn-back" onClick={() => navigate(-1)}>Back</button>
             </div>
         </div>
     );
