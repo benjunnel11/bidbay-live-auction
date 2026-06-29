@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/bidbay-live-auction/static/css/main.1a0c7e06.css",
-    "main.js": "/bidbay-live-auction/static/js/main.523c7848.js",
-    "static/js/453.4386668d.chunk.js": "/bidbay-live-auction/static/js/453.4386668d.chunk.js",
+    "main.css": "/bidbay-live-auction/static/css/main.96047777.css",
+    "main.js": "/bidbay-live-auction/static/js/main.5ba0e206.js",
+    "static/js/453.49d8b09a.chunk.js": "/bidbay-live-auction/static/js/453.49d8b09a.chunk.js",
     "index.html": "/bidbay-live-auction/index.html",
-    "main.1a0c7e06.css.map": "/bidbay-live-auction/static/css/main.1a0c7e06.css.map",
-    "main.523c7848.js.map": "/bidbay-live-auction/static/js/main.523c7848.js.map",
-    "453.4386668d.chunk.js.map": "/bidbay-live-auction/static/js/453.4386668d.chunk.js.map"
+    "main.96047777.css.map": "/bidbay-live-auction/static/css/main.96047777.css.map",
+    "main.5ba0e206.js.map": "/bidbay-live-auction/static/js/main.5ba0e206.js.map",
+    "453.49d8b09a.chunk.js.map": "/bidbay-live-auction/static/js/453.49d8b09a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1a0c7e06.css",
-    "static/js/main.523c7848.js"
+    "static/css/main.96047777.css",
+    "static/js/main.5ba0e206.js"
   ]
 }
